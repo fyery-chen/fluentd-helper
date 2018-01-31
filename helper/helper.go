@@ -3,7 +3,6 @@ package helper
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
@@ -18,6 +17,7 @@ var httpClient = &http.Client{Timeout: 10 * time.Second}
 const ReloadPath = "/api/config.reload"
 
 func ReloadFluentd() error {
+	logrus.Infof("sending request to reload fluentd")
 	ReloadURL := fmt.Sprintf("http://%s%s", config.FluentdAddress, ReloadPath)
 	req, err := http.NewRequest("GET", ReloadURL, nil)
 	if err != nil {
@@ -25,15 +25,16 @@ func ReloadFluentd() error {
 	}
 	res, err := httpClient.Do(req)
 	if err != nil {
-		logrus.Infof("get error when call  %s, details: %s", ReloadURL, err.Error())
+		logrus.Errorf("get error when call  %s, details: %s", ReloadURL, err.Error())
 		return err
 	}
 	if res.StatusCode != 200 {
 		responseData, err := ioutil.ReadAll(res.Body)
+		logrus.Infof("reload fluentd fail, response from %s, status code: %v, res %s", ReloadURL, res.Status, string(responseData))
 		if err != nil {
-			log.Fatal(err)
+			logrus.Errorf("read fluentd response fail: %s", err)
+			return err
 		}
-		logrus.Infof("response from %s, status code: %v, res %s", ReloadURL, res.Status, string(responseData))
 	}
 
 	logrus.Infof("reponse 200 from reload fluentd")

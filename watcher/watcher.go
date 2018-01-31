@@ -19,8 +19,11 @@ func Watcherfile(path string, done <-chan int) {
 			select {
 			// watch for events
 			case event := <-watcher.Events:
-				if event.Op&fsnotify.Write == fsnotify.Write {
-					logrus.Infof("modified file: %#v, %#v", event.Name, event.Op.String())
+				logrus.Infof("------- receive file event ----, name: %#v, op: %#v, event: %#v", event.Name, event.Op.String())
+				if event.Op == fsnotify.Remove {
+					watcher.Remove(event.Name)
+					watcher.Add(event.Name)
+					logrus.Infof("receive file event: %#v, %#v", event.Name, event.Op.String())
 					helper.ReloadFluentd()
 				}
 

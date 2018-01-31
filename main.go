@@ -24,7 +24,7 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "fluentd-address",
-			Usage: "Enable debug logs",
+			Usage: "fluentd reload address",
 			Value: "127.0.0.1:24444",
 		},
 		cli.StringSliceFlag{
