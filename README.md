@@ -1,7 +1,7 @@
 fluentd-helper
 ========
 
-A microservice that does micro things.
+Reloads fluentd based on configuration files
 
 ## Building
 
@@ -13,7 +13,7 @@ A microservice that does micro things.
 `./bin/fluentd-helper`
 
 ## License
-Copyright (c) 2014-2016 [Rancher Labs, Inc.](http://rancher.com)
+Copyright (c) 2014-2018 [Rancher Labs, Inc.](http://rancher.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
