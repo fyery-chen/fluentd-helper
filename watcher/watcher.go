@@ -23,10 +23,12 @@ func Watcherfile(path string, done <-chan int) {
 				if event.Op == fsnotify.Remove {
 					watcher.Remove(event.Name)
 					watcher.Add(event.Name)
-					logrus.Infof("receive file event: %#v, %#v", event.Name, event.Op.String())
+					logrus.Infof("receive remove event: %#v, %#v", event.Name, event.Op.String())
+					helper.ReloadFluentd()
+				} else if event.Op == fsnotify.Write {
+					logrus.Infof("receive write event: %#v, %#v", event.Name, event.Op.String())
 					helper.ReloadFluentd()
 				}
-
 				// watch for errors
 			case err := <-watcher.Errors:
 				logrus.Errorf("file watcher get error: %v", err)
