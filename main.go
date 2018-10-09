@@ -12,6 +12,8 @@ import (
 	"github.com/urfave/cli"
 
 	"github.com/rancher/fluentd-helper/config"
+	"github.com/rancher/fluentd-helper/helper"
+	"time"
 )
 
 var VERSION = "v0.0.0-dev"
@@ -52,6 +54,18 @@ func run(c *cli.Context) error {
 			watcher.Watcherfile(file, jobs)
 		}(v, jobs)
 	}
+
+	go func() {
+		ticker := time.NewTicker(7 * time.Minute)
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <-ticker.C:
+				helper.RenewTicket()
+			}
+		}
+	}()
 
 	waitForSignal()
 	close(jobs)

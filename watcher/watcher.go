@@ -27,6 +27,7 @@ func Watcherfile(path string, done <-chan int) {
 					helper.ReloadFluentd()
 				} else if event.Op == fsnotify.Write {
 					logrus.Infof("receive write event: %#v, %#v", event.Name, event.Op.String())
+					helper.RenewTicket()
 					helper.ReloadFluentd()
 				}
 				// watch for errors

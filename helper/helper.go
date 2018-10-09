@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os/exec"
 	"time"
 
 	"github.com/Sirupsen/logrus"
 
+	"bytes"
 	"github.com/rancher/fluentd-helper/config"
 )
 
@@ -40,5 +42,16 @@ func ReloadFluentd() error {
 	logrus.Infof("reponse 200 from reload fluentd")
 	defer res.Body.Close()
 
+	return nil
+}
+
+func RenewTicket() error {
+	logrus.Infof("renew ticket for new users")
+	cmd := exec.Command("/kerberos-init.sh")
+	bufErr := &bytes.Buffer{}
+	cmd.Stderr = bufErr
+	if err := cmd.Run(); err != nil {
+		return err
+	}
 	return nil
 }
